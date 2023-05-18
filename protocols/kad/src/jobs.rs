@@ -233,8 +233,8 @@ impl PutRecordJob {
             for r in records {
                 if r.is_expired(now) {
                     store.remove(&r.key)
-                } else {
-                    return Poll::Ready(r);
+                } else if let Some(r) = store.get(&r.key) {
+                    return Poll::Ready(r.as_ref().clone());
                 }
             }
 
